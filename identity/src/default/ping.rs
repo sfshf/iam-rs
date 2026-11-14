@@ -1,0 +1,18 @@
+use crate::default::IdentityServiceImpl;
+use proto::identity::{PingRequest, PingResponse};
+use tonic::{Request, Response, Status};
+
+// ping Handle ping requests
+pub async fn ping(
+    _service: &IdentityServiceImpl,
+    request: Request<PingRequest>, // Accept request of type PingRequest
+) -> Result<Response<PingResponse>, Status> {
+    // Return an instance of type PingResponse
+    println!("Got a request: {:?}", request);
+
+    let reply = PingResponse {
+        ts: request.into_inner().ts, // We must use .into_inner() as the fields of gRPC requests and responses are private
+    };
+
+    Ok(Response::new(reply)) // Send back our formatted greeting
+}

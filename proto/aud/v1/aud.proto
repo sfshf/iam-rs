@@ -1,0 +1,19 @@
+syntax = "proto3";
+package aud.v1;
+
+import "google/api/annotations.proto";
+
+service AudService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/v1/aud/ping"};
+  }
+}
+
+message PingRequest {
+  int64 ts = 1;
+}
+
+message PingResponse {
+  int64 ts = 1;
+}

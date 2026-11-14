@@ -1,0 +1,19 @@
+syntax = "proto3";
+package daily.v1;
+
+import "google/api/annotations.proto";
+
+service DailyService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/v1/daily/ping"};
+  }
+}
+
+message PingRequest {
+  int64 ts = 1;
+}
+
+message PingResponse {
+  int64 ts = 1;
+}

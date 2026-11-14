@@ -1,0 +1,20 @@
+syntax = "proto3";
+package authz.v1;
+
+import "google/api/annotations.proto";
+
+service AuthzService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/v1/authz/ping"};
+  }
+  //
+}
+
+message PingRequest {
+  int64 ts = 1;
+}
+
+message PingResponse {
+  int64 ts = 1;
+}

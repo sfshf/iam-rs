@@ -1,0 +1,141 @@
+syntax = "proto3";
+package identity.v1;
+
+import "google/api/annotations.proto";
+
+service IdentityService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/v1/identity/ping"};
+  }
+  // GetUser 根据邮箱/用户名/手机号查询用户信息
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/v1/identity/user/{id}"};
+  }
+  // AddUser 新建用户账号（用户注册）
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/identity/user"
+      body: "*"
+    };
+  }
+  // UpdateUser 更新用户信息
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1/identity/user/{id}"
+      body: "*"
+    };
+  }
+  // DeleteUser 删除用户账号
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {delete: "/v1/identity/user/{id}"};
+  }
+  // ListUser 查询用户列表
+  rpc ListUser(ListUserRequest) returns (ListUserResponse) {
+    option (google.api.http) = {get: "/v1/identity/user"};
+  }
+  // Login 用户登录
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+      body: "*"
+    };
+  }
+  // Logout 用户登出
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/logout"
+      body: "*"
+    };
+  }
+}
+
+message PingRequest {
+  int64 ts = 1;
+}
+
+message PingResponse {
+  int64 ts = 1;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  string id = 1; // 记录ID
+  string username = 2; // 用户名
+  string email = 3; // 邮箱
+  string mobile = 4; // 手机号
+  int32 status = 5; // 用户状态：0-禁用，1-启用
+  int64 created_at = 6; // 创建时间
+  int64 updated_at = 7; // 更新时间
+}
+
+message AddUserRequest {
+  string email = 1;
+  string username = 2;
+  string mobile = 3;
+}
+
+message AddUserResponse {}
+
+message UpdateUserRequest {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string mobile = 4;
+}
+
+message UpdateUserResponse {}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message DeleteUserResponse {}
+
+message ListUserRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message UserInfo {
+  string id = 1; // 记录ID
+  string username = 2; // 用户名
+  string email = 3; // 邮箱
+  string mobile = 4; // 手机号
+  int32 status = 5; // 用户状态：0-禁用，1-启用
+  int64 created_at = 6; // 创建时间
+  int64 updated_at = 7; // 更新时间
+}
+
+message ListUserResponse {
+  int32 total = 1;
+  repeated UserInfo users = 2;
+}
+
+message LoginRequest {
+  string identity = 1; // 邮箱/用户名/手机号
+  string password = 2;
+}
+
+message UserRole {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+}
+
+message UserDomain {
+  string id = 1;
+  string name = 2;
+  repeated UserRole roles = 3;
+}
+
+message LoginResponse {
+  repeated UserDomain domains = 1;
+}
+
+message LogoutRequest {}
+
+message LogoutResponse {}
