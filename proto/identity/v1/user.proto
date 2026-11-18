@@ -1,0 +1,93 @@
+syntax = "proto3";
+package identity.v1;
+
+import "google/api/annotations.proto";
+
+service UserService {
+  // GetUser 根据邮箱/用户名/手机号查询用户信息
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/api/v1/identity/user/{id}"};
+  }
+  // AddUser 新建用户账号（用户注册）
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/user"
+      body: "*"
+    };
+  }
+  // UpdateUser 更新用户信息
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/identity/user/{id}"
+      body: "*"
+    };
+  }
+  // DeleteUser 删除用户账号
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {delete: "/api/v1/identity/user/{id}"};
+  }
+  // ListUser 查询用户列表
+  rpc ListUser(ListUserRequest) returns (ListUserResponse) {
+    option (google.api.http) = {get: "/api/v1/identity/user"};
+  }
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  string id = 1; // 记录ID
+  string username = 2; // 用户名
+  string email = 3; // 邮箱
+  string mobile = 4; // 手机号
+  int32 status = 5; // 用户状态：0-禁用，1-启用
+  int64 created_at = 6; // 创建时间
+  int64 updated_at = 7; // 更新时间
+}
+
+message AddUserRequest {
+  string email = 1;
+  string username = 2;
+  string mobile = 3;
+}
+
+message AddUserResponse {}
+
+message UpdateUserRequest {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string mobile = 4;
+}
+
+message UpdateUserResponse {}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message DeleteUserResponse {}
+
+message ListUserRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string username = 3;
+  string email = 4;
+  string phone = 5;
+}
+
+message UserInfo {
+  string id = 1; // 记录ID
+  string username = 2; // 用户名
+  string email = 3; // 邮箱
+  string mobile = 4; // 手机号
+  int32 status = 5; // 用户状态：0-禁用，1-启用
+  int64 created_at = 6; // 创建时间
+  int64 updated_at = 7; // 更新时间
+}
+
+message ListUserResponse {
+  int32 total = 1;
+  repeated UserInfo users = 2;
+}

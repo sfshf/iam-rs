@@ -1,0 +1,86 @@
+syntax = "proto3";
+package identity.v1;
+
+import "google/api/annotations.proto";
+
+service AuthService {
+  // SetPassword 设置密码
+  rpc SetPassword(SetPasswordRequest) returns (SetPasswordResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/auth/password"
+      body: "*"
+    };
+  }
+  // SetMFA 设置MFA
+  rpc SetMFA(SetMFARequest) returns (SetMFAResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/auth/mfa"
+      body: "*"
+    };
+  }
+  // Login 用户登录
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/auth/login"
+      body: "*"
+    };
+  }
+  // Logout 用户登出
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/auth/logout"
+      body: "*"
+    };
+  }
+  // RefreshToken 刷新令牌
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/auth/refresh_token"
+      body: "*"
+    };
+  }
+}
+
+message SetPasswordRequest {
+  string user_id = 1;
+  string password = 2;
+}
+
+message SetPasswordResponse {}
+
+message SetMFARequest {}
+
+message SetMFAResponse {
+  bool enabled = 1;
+}
+
+message LoginRequest {
+  string identity = 1; // 邮箱/用户名/手机号
+  string password = 2;
+}
+
+message UserRole {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+}
+
+message UserDomain {
+  string id = 1;
+  string name = 2;
+  repeated UserRole roles = 3;
+}
+
+message LoginResponse {
+  repeated UserDomain domains = 1;
+}
+
+message LogoutRequest {}
+
+message LogoutResponse {}
+
+message RefreshTokenRequest {
+  int32 status = 1; // session状态，1:在线，2:离线，3:隐身
+}
+
+message RefreshTokenResponse {}

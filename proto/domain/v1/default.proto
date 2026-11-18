@@ -1,0 +1,19 @@
+syntax = "proto3";
+package domain.v1;
+
+import "google/api/annotations.proto";
+
+service DefaultService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/api/v1/domain/ping"};
+  }
+}
+
+message PingRequest {
+  int64 ts = 1;
+}
+
+message PingResponse {
+  int64 ts = 1;
+}

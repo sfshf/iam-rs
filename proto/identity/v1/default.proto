@@ -1,0 +1,19 @@
+syntax = "proto3";
+package identity.v1;
+
+import "google/api/annotations.proto";
+
+service DefaultService {
+  // Ping 服务探活
+  rpc Ping(PingRequest) returns (PingResponse) {
+    option (google.api.http) = {get: "/api/v1/identity/ping"};
+  }
+}
+
+message PingRequest {
+  int64 ts = 1; // 时间戳
+}
+
+message PingResponse {
+  int64 ts = 1; // 时间戳
+}
