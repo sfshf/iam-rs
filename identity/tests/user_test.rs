@@ -19,11 +19,9 @@ mod tests {
             .returning(|_| {
                 Ok(Some(User {
                     id: id.to_string(),
-                    nickname: "Alice".to_string(),
                     username: "root".to_string(),
                     email: "".to_string(),
                     mobile: "".to_string(),
-                    avatar: "".to_string(),
                     status: 1,
                     created_at: 0,
                     updated_at: 0,

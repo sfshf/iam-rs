@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS "public"."t_user" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- 记录ID
     "username" VARCHAR(255) NOT NULL UNIQUE, -- 用户名
     "email" VARCHAR(255) NOT NULL UNIQUE, -- 邮箱
-    "mobile" VARCHAR(255) NOT NULL, -- 手机号
+    "mobile" VARCHAR(255) NOT NULL UNIQUE, -- 手机号：有国际电话区号前缀
     "status" SMALLINT NOT NULL, -- 用户状态，1:启用，2:禁用，3:冻结
     "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 创建时间
     "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- 更新时间
 );
 
--- `t_profile` 用户资料表，用户经常修改的身份信息
-CREATE TABLE IF NOT EXISTS "public"."t_profile" (
+-- `t_user_profile` 用户资料表，用户经常修改的身份信息
+CREATE TABLE IF NOT EXISTS "public"."t_user_profile" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- 记录ID
     "user_id" UUID NOT NULL UNIQUE, -- 用户ID，关联t_user表
     "nickname" VARCHAR(255) NOT NULL, -- 昵称
@@ -25,6 +25,17 @@ CREATE TABLE IF NOT EXISTS "public"."t_profile" (
     "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- 更新时间
 );
 
+-- `t_passphrase` 密码表
+CREATE TABLE IF NOT EXISTS "public"."t_passphrase" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- 记录ID
+    "user_id" UUID NOT NULL, -- 用户ID，关联t_user表
+    "phrase_salt" VARCHAR(32) NOT NULL, -- 密码盐
+    "phrase_hash" VARCHAR(255) NOT NULL, -- 密码摘要
+    "use_mfa" SMALLINT NOT NULL, -- 是否启用MFA，1:启用，~1:禁用
+    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 创建时间
+    "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- 更新时间
+);
+
 -- `t_session` 会话表
 CREATE TABLE IF NOT EXISTS "public"."t_session" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- 记录ID
@@ -33,17 +44,6 @@ CREATE TABLE IF NOT EXISTS "public"."t_session" (
     "ip" VARCHAR(255) NOT NULL, -- 登录IP
     "ua" TEXT NOT NULL, -- 登录UA
     "token" TEXT NOT NULL, -- 令牌，比如JWT
-    "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 创建时间
-    "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- 更新时间
-);
-
--- `t_passphrase` 密码表
-CREATE TABLE IF NOT EXISTS "public"."t_passphrase" (
-    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- 记录ID
-    "user_id" UUID NOT NULL, -- 用户ID，关联t_user表
-    "phrase_salt" VARCHAR(32) NOT NULL, -- 密码盐
-    "phrase_hash" VARCHAR(255) NOT NULL, -- 密码摘要
-    "use_mfa" SMALLINT NOT NULL, -- 是否启用MFA，1:启用，~1:禁用
     "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 创建时间
     "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP -- 更新时间
 );
