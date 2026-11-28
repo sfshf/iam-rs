@@ -37,9 +37,6 @@ pub async fn add_user(
     service: &UserServiceImpl,
     request: Request<AddUserRequest>, // Accept request of type AddUserRequest
 ) -> Result<Response<AddUserResponse>, Status> {
-    // 检索有没有相同用户名的记录
-    // 检索有没有相同邮箱的记录
-    // 检索有没有相同手机号的记录
     Ok(Response::new(AddUserResponse {}))
 }
 
